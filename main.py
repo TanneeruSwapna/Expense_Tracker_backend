@@ -27,6 +27,18 @@ app = FastAPI()
 def home():
     return {"message":"Backend is running" }
 
+
+@app.get("/test-db")
+def test_db():
+
+    conn = get_db_connection()
+
+    return {"message": "Database Connected"}
+
+
+
+
+
 # -----------------------------------
 # ADD EXPENSE
 # -----------------------------------
