@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+# from fastapi import FastAPI
 import mysql.connector
 import os
 
@@ -7,9 +7,9 @@ import os
 # -----------------------------------
 
 conn = mysql.connector.connect(
-     host=os.getenv("DB_HOST"),
+    host=os.getenv("DB_HOST"),
     database=os.getenv("Database_name"),
-    port=os.getenv("Port"),
+    port=int(os.getenv("DB_PORT")),   # ✅ FIXED HERE
     user=os.getenv("User"),
     password=os.getenv("Password")
 )
