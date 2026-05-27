@@ -32,9 +32,13 @@ def home():
 @app.get("/test-db")
 def test_db():
 
-    conn = get_db_connection()
+    try:
+        conn = get_db_connection()
 
-    return {"message": "Database Connected"}
+        return {"message": "Database Connected"}
+
+    except Exception as e:
+        return {"error": str(e)}
 
 
 
