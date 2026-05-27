@@ -50,27 +50,31 @@ def test_db():
 @app.post("/expenses")
 def add_expense(expense: dict):
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-    query = """
-    INSERT INTO expenses(title, amount, category)
-    VALUES(%s, %s, %s)
-    """
+        query = """
+        INSERT INTO expenses(title, amount, category)
+        VALUES(%s, %s, %s)
+        """
 
-    values = (
-        expense["title"],
-        expense["amount"],
-        expense["category"]
-    )
+        values = (
+            expense["title"],
+            expense["amount"],
+            expense["category"]
+        )
 
-    cursor.execute(query, values)
-    conn.commit()
+        cursor.execute(query, values)
+        conn.commit()
 
-    cursor.close()
-    conn.close()
+        cursor.close()
+        conn.close()
 
-    return {"message": "Expense Added Successfully"}
+        return {"message": "Expense Added Successfully"}
+
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # -----------------------------------
