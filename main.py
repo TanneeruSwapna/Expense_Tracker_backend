@@ -18,7 +18,8 @@ def get_db_connection():
         password=os.getenv("DB_PASSWORD"),
         database=os.getenv("DB_NAME"),
         port=int(os.getenv("DB_PORT", 3306)),
-        ssl_disabled=False
+        ssl_disabled=False,
+        auth_plugin="mysql_native_password"
     )
 
 app = FastAPI()
