@@ -8,15 +8,21 @@ from dotenv import load_dotenv
 # -----------------------------------
 load_dotenv()
 
-conn = mysql.connector.connect(
+
+def get_db_connection():
+    return mysql.connector.connect(
     host=os.getenv("DB_HOST"),
-    database=os.getenv("Database_name", "127.0.0.1"),
-    port=int(os.getenv("DB_Port")),
-    user=os.getenv("DB_User"),
-    password=os.getenv("DB_Password")
+    database=os.getenv("DB_NAME"),
+    port=int(os.getenv("DB_PORT", 3306)),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD")
 )
 
-cursor = conn.cursor(dictionary=True)
+app = FastAPI()
+
+def get_cursor():
+    conn = get_db_connection()
+    return conn, conn.cursor(dictionary = True)
 
 # -----------------------------------
 # FASTAPI APP
