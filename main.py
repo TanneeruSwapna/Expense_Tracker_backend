@@ -56,8 +56,8 @@ def add_expense(expense: dict):
         cursor = conn.cursor(dictionary=True)
 
         query = """
-        INSERT INTO expenses (title, amount, category, description, payment_method)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO expenses (title, amount, category, description, payment_method, created_at)
+        VALUES (%s, %s, %s, %s, %s, NOW())
         """
 
         values = (
@@ -78,7 +78,6 @@ def add_expense(expense: dict):
 
     except Exception as e:
         return {"error": str(e)}
-
 # -----------------------------------
 # GET ALL EXPENSES
 # -----------------------------------
@@ -107,31 +106,35 @@ def get_expenses():
 @app.put("/expenses/{expense_id}")
 def update_expense(expense_id: int, expense: dict):
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    query = """
-    UPDATE expenses
-    SET title=%s, amount=%s, category=%s
-    WHERE expense_id=%s
-    """
+        query = """
+        UPDATE expenses
+        SET title=%s, amount=%s, category=%s, description=%s, payment_method=%s
+        WHERE expense_id=%s
+        """
 
-    values = (
-        expense["title"],
-        expense["amount"],
-        expense["category"],
-        expense_id
-    )
+        values = (
+            expense.get("title"),
+            expense.get("amount"),
+            expense.get("category"),
+            expense.get("description", ""),
+            expense.get("payment_method", "Cash"),
+            expense_id
+        )
 
-    cursor.execute(query, values)
-    conn.commit()
+        cursor.execute(query, values)
+        conn.commit()
 
-    cursor.close()
-    conn.close()
+        cursor.close()
+        conn.close()
 
-    return {"message": "Expense Updated Successfully"}
+        return {"message": "Expense Updated Successfully"}
 
-
+    except Exception as e:
+        return {"error": str(e)}
 # -----------------------------------
 # DELETE EXPENSE
 # -----------------------------------
