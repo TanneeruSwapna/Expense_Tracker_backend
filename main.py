@@ -47,6 +47,7 @@ def test_db():
 # -----------------------------------
 # ADD EXPENSE
 # -----------------------------------
+
 @app.post("/expenses")
 def add_expense(expense: dict):
 
@@ -55,14 +56,16 @@ def add_expense(expense: dict):
         cursor = conn.cursor(dictionary=True)
 
         query = """
-        INSERT INTO expenses(title, amount, category)
-        VALUES(%s, %s, %s)
+        INSERT INTO expenses (title, amount, category, description, payment_method)
+        VALUES (%s, %s, %s, %s, %s)
         """
 
         values = (
-            expense["title"],
-            expense["amount"],
-            expense["category"]
+            expense.get("title"),
+            expense.get("amount"),
+            expense.get("category"),
+            expense.get("description", ""),
+            expense.get("payment_method", "Cash")
         )
 
         cursor.execute(query, values)
@@ -76,23 +79,26 @@ def add_expense(expense: dict):
     except Exception as e:
         return {"error": str(e)}
 
-
 # -----------------------------------
 # GET ALL EXPENSES
 # -----------------------------------
 @app.get("/expenses")
 def get_expenses():
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM expenses ORDER BY expense_id ASC")
-    data = cursor.fetchall()
+        cursor.execute("SELECT * FROM expenses")
+        data = cursor.fetchall()
 
-    cursor.close()
-    conn.close()
+        cursor.close()
+        conn.close()
 
-    return {"expenses": data}
+        return {"expenses": data}
+
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # -----------------------------------
