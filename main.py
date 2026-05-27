@@ -1,15 +1,17 @@
 from fastapi import FastAPI
 import mysql.connector
+import os
 
 # -----------------------------------
 # DATABASE CONNECTION
 # -----------------------------------
 
 conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Dream@0502",
-    database="expense_tracker"
+     host=os.getenv("DB_HOST"),
+    database=os.getenv("Database_name"),
+    port=os.getenv("Port"),
+    user=os.getenv("User"),
+    password=os.getenv("Password")
 )
 
 cursor = conn.cursor(dictionary=True)
