@@ -1,17 +1,19 @@
-# from fastapi import FastAPI
+from fastapi import FastAPI
 import mysql.connector
 import os
+from dotenv import load_dotenv
 
 # -----------------------------------
 # DATABASE CONNECTION
 # -----------------------------------
+load_dotenv()
 
 conn = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
-    database=os.getenv("Database_name"),
-    port=int(os.getenv("DB_PORT")),   # ✅ FIXED HERE
-    user=os.getenv("User"),
-    password=os.getenv("Password")
+    database=os.getenv("Database_name", "127.0.0.1"),
+    port=int(os.getenv("DB_Port")),
+    user=os.getenv("DB_User"),
+    password=os.getenv("DB_Password")
 )
 
 cursor = conn.cursor(dictionary=True)
